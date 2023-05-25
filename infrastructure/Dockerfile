@@ -1,6 +1,6 @@
 FROM node:lts
 LABEL maintainer "Matthias_Sebastian"
-LABEL org.opencontainers.image.source="https://github.com/Maetzl/ice_backend"
+LABEL org.opencontainers.image.source="https://github.com/maetzl/ice_backend"
 
 WORKDIR /usr/app  
 
