@@ -6,4 +6,4 @@ function mul(a: any, b: any){
     return a*b;
 }
 
-export {sum};
+export {sum, mul};
