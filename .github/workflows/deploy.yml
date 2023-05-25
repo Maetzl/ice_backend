@@ -9,6 +9,9 @@ on:
 jobs:
   test-and-build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
  
     strategy:
       matrix:
@@ -58,4 +61,4 @@ jobs:
           file: ./infrastructure/Dockerfile
           push: true
           tags: | 
-            ghcr.io/https://github.com/maetzl/ice_backend:latest
+            ghcr.io/maetzl/ice_backend:latest
