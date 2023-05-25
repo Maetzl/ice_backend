@@ -57,5 +57,5 @@ jobs:
           context: .
           file: ./infrastructure/Dockerfile
           push: true
-          tags: |
-            ghcr.io/${{ github.repository }}:latest   
+          tags: | 
+            test
