@@ -1,5 +1,5 @@
 import {describe, expect, test} from '@jest/globals';
-import {app} from '../index';
+import {app} from '../app';
 import request from 'supertest';
 
 describe("Test the root path", () => {
