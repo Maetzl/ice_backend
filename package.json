@@ -8,7 +8,7 @@
     "start": "node build/index.js",
     "dev": "concurrently \"npx tsc --watch\" \"nodemon -q build/index.js\"",
     "test": "jest",
-    "test:ci": "jest"
+    "test:ci": "jest --detectOpenHandles"
   },
   "keywords": [],
   "author": "",
