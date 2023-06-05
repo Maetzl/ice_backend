@@ -4,5 +4,6 @@
 
 # Codecoverage
 
-[![Frontend](https://codecov.io/gh/Maetzl/ice_frontend/branch/main/graph/badge.svg?token=4NYZLQ9M5T)](https://codecov.io/gh/Maetzl/ice_frontend)
-[![Backend](https://codecov.io/gh/Maetzl/ice_backend/branch/main/graph/badge.svg?token=D9CSE8TBM7)](https://codecov.io/gh/Maetzl/ice_backend)
+Frontend: [![codecov](https://codecov.io/gh/Maetzl/ice_frontend/branch/main/graph/badge.svg?token=4NYZLQ9M5T)](https://codecov.io/gh/Maetzl/ice_frontend)
+
+Backend: [![codecov](https://codecov.io/gh/Maetzl/ice_backend/branch/main/graph/badge.svg?token=D9CSE8TBM7)](https://codecov.io/gh/Maetzl/ice_backend)
