@@ -39,6 +39,7 @@ profileRouter.post("/", validateAccessToken, async (req : any, res :any) => {
           "country": "",
           "games": [
           ],
+          "profilePictureUrl": "",
           "playerID": userID
         });
 
