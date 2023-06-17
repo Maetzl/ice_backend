@@ -73,7 +73,7 @@ app.use(
 app.use("/api", apiRouter);
 apiRouter.use("/messages", messagesRouter);
 
-app.use("/", apiRouter)
+//app.use("/", apiRouter)
 apiRouter.use("/profile", profileRouter);
 
 app.use(errorHandler);
