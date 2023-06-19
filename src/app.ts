@@ -4,6 +4,7 @@ import helmet from 'helmet';
 import cors from 'cors';
 import nocache from 'nocache';
 import { profileRouter } from './router/profile_router';
+import { gamesRouter } from './router/games_router';
 const { messagesRouter } = require("./messages/messages_router");
 const { errorHandler } = require("./middleware/error");
 const { notFoundHandler } = require("./middleware/not-found");
@@ -75,6 +76,7 @@ apiRouter.use("/messages", messagesRouter);
 
 //app.use("/", apiRouter)
 apiRouter.use("/profile", profileRouter);
+apiRouter.use("/games", gamesRouter);
 
 app.use(errorHandler);
 app.use(notFoundHandler);
