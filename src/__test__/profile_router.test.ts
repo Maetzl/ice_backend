@@ -161,9 +161,9 @@ describe("Profile Router", () => {
       expect(response.text).toBe("Multiple Documents with same ID");
     });
 
-    it("should handle internal server error", async () => {
+    it("should handle internal server error when there is no user", async () => {
       const userID = "testUser";
-      jest.spyOn(collection, "updateOne").mockRejectedValueOnce("Some error");
+      await collection.deleteMany({ playerID: { $in: ["testUser"] } });
 
       const response = await request(app)
         .post("/update")
@@ -172,7 +172,30 @@ describe("Profile Router", () => {
         .send({ UserID: userID, Name: "John Doe" });
 
       expect(response.status).toBe(500);
+      expect(response.text).toBe("No User with that ID");
+    });
+
+    it("should handle internal server error", async () => {
+      const userID = "testUser";
+      jest.spyOn(MongoClient, "connect").mockImplementationOnce(() => {
+        throw new Error("Connection error");
+      });
+
+      const response = await request(app)
+        .post("/update")
+        .set("Content-Type", "application/json")
+        .set("Authorization", `Bearer ${validAccessToken}`)
+        .send({
+          UserID: userID,
+          Name: "John Doe",
+          Description: "Some description",
+          Country: "USA",
+        });
+
+      expect(response.status).toBe(500);
       expect(response.text).toBe("Interner Serverfehler");
+
+      jest.spyOn(MongoClient, "connect").mockRestore();
     });
   });
 });

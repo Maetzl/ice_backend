@@ -95,7 +95,7 @@ profileRouter.post(
         res.status(200).json({});
       } else if (user.modifiedCount == 0) {
         console.log(user, " ", userID, " ", result);
-        res.status(500).send("Interner Serverfehler");
+        res.status(500).send("No User with that ID");
       } else {
         //res.status(500).send("Multiple Documents with same ID");
       }
