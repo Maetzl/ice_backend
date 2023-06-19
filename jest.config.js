@@ -43,12 +43,12 @@ module.exports = {
 
   // An object that configures minimum threshold enforcement for coverage results
   coverageThreshold: {
-    "global": {
-      "branches": 0,
-      "functions": 0,
-      "lines": 0,
-      "statements": 0
-    }
+    global: {
+      branches: 0,
+      functions: 0,
+      lines: 0,
+      statements: 0,
+    },
   },
 
   // A path to a custom dependency extractor
@@ -139,7 +139,7 @@ module.exports = {
   // runner: "jest-runner",
 
   // The paths to modules that run some code to configure or set up the testing environment before each test
-  // setupFiles: [],
+  setupFiles: ["./setupTests.ts"],
 
   // A list of paths to modules that run some code to configure or set up the testing framework before each test
   // setupFilesAfterEnv: [],
