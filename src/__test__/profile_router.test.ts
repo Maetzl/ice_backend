@@ -57,7 +57,6 @@ describe("Profile Router", () => {
         description: "",
         country: "",
         games: [],
-        profilePictureUrl: "",
         playerID: userID,
       };
       await collection.insertOne(user);
@@ -76,7 +75,6 @@ describe("Profile Router", () => {
         description: user.description,
         country: user.country,
         games: user.games,
-        profilePictureUrl: user.profilePictureUrl,
         playerID: userID,
       };
 
@@ -127,7 +125,6 @@ describe("Profile Router", () => {
         description: "",
         country: "",
         games: [],
-        profilePictureUrl: "",
         playerID: userID,
       };
       await collection.insertOne(user);

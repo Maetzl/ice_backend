@@ -37,7 +37,6 @@ profileRouter.post("/", validateAccessToken, async (req: any, res: any) => {
         description: "",
         country: "",
         games: [],
-        profilePictureUrl: "",
         playerID: userID,
       });
 
@@ -107,5 +106,27 @@ profileRouter.post(
     }
   }
 );
+profileRouter.get("/basket", async(req: any, res: { status: (arg0: number) => { (): any; new(): any; json: { (arg0: any): void; new(): any; }; }; }) => {
 
+  const userID = req.body.UserID;
+  const mongoURI = process.env.MONGO_URL || "";
+
+  try {
+    const client = await MongoClient.connect(mongoURI);
+    const db: Db = client.db("Ice");
+    const collectionUsers: Collection = db.collection("Users");
+    const collectionGames: Collection = db.collection("Games");
+
+    const user = await collectionUsers.find({ playerID: userID }).toArray();    
+    const gameIds = user[0].basket;
+    const basket= await collectionGames.find({gameID: { $in: gameIds } }).toArray();
+      
+    res.status(200).json(basket);
+
+    client.close(); // Schließe die Verbindung zur Datenbank
+  }catch (err) {
+      console.error("Fehler beim Ausführen der Abfrage:", err);
+      res.status(500);
+    }
+});
 export { profileRouter };
