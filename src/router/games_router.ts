@@ -5,7 +5,7 @@ const { validateAccessToken } = require("../middleware/auth0");
 
 const gamesRouter = express.Router();
 
-gamesRouter.post("/", validateAccessToken, async (req: any, res: any) => {
+gamesRouter.post("/", async (req: any, res: any) => {
   const mongoURI = process.env.MONGO_URL || "";
 
   try {
