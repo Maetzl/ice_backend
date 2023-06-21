@@ -84,5 +84,49 @@ gamesRouter.post(
     }
   }
 );
+gamesRouter.post("/game", async (req: any, res: any) => {
+  const mongoURI = process.env.MONGO_URL || "";
 
+  const gameID = req.body.GameID;
+
+  try {
+    const client = await MongoClient.connect(mongoURI);
+    const db: Db = client.db("Ice");
+    const collection: Collection = db.collection("Games");
+
+    const games = await collection.find({gameID: gameID}).toArray();
+
+    res.status(200).send(games);
+
+    client.close(); // Schließe die Verbindung zur Datenbank
+  } catch (err) {
+    console.error("Fehler beim Ausführen der Abfrage:", err);
+    res.status(500).send("Interner Serverfehler");
+  }
+});
+gamesRouter.post("/addbasket", async (req: any, res: any) => {
+  const mongoURI = process.env.MONGO_URL || "";
+
+  const gameID = req.body.GameID;
+  const userID = req.body.UserID;
+
+  try {
+    const client = await MongoClient.connect(mongoURI);
+    const db: Db = client.db("Ice");
+
+    const collectionUsers: Collection = db.collection("Users");
+
+    const addGame = {
+      $push: { basket: gameID }
+    }
+
+    await collectionUsers.updateOne({playerID: userID},addGame)
+    res.status(200);
+
+    client.close(); // Schließe die Verbindung zur Datenbank
+  } catch (err) {
+    console.error("Fehler beim Ausführen der Abfrage:", err);
+    res.status(500).send("Interner Serverfehler");
+  }
+});
 export { gamesRouter };
