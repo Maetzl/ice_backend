@@ -144,7 +144,7 @@ gamesRouter.post("/addcomment", async (req: any, res: any) => {
     const collectionGames: Collection = db.collection("Games");
 
     const addComment = {
-      $push: { comment: {text: comment, authorID: userID, authorName : userName}}
+      $push: { comments: {text: comment, authorID: userID, authorName : userName}}
     }
 
     await collectionGames.updateOne({gameID: gameID},addComment)
