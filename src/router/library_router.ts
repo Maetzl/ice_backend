@@ -24,7 +24,6 @@ libraryRouter.post("/", validateAccessToken, async (req: any, res: any) => {
 
     client.close(); // Schließe die Verbindung zur Datenbank
   } catch (err) {
-    console.error("Fehler beim Ausführen der Abfrage:", err);
     res.status(500).send("Interner Serverfehler");
   }
 })
