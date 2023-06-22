@@ -34,18 +34,6 @@ profileRouter.post("/", validateAccessToken, async (req: any, res: any) => {
     console.log(user);
 
     if (user.length == 0) {
-      //const result = await collection.insertOne({
-      //  name: "",
-      //  description: "",
-      //  country: "",
-      //  games: [],
-      //  playerID: userID,
-      //});
-      //
-      //const getInputedData = await collection
-      //  .find({ playerID: userID })
-      //  .toArray();
-      //
       res.status(500).json("Cant find user");
     } else if (user.length == 1) {
       res.status(200).json(user[0]);
