@@ -129,4 +129,31 @@ gamesRouter.post("/addbasket", async (req: any, res: any) => {
     res.status(500).send("Interner Serverfehler");
   }
 });
+gamesRouter.post("/addcomment", async (req: any, res: any) => {
+  const mongoURI = process.env.MONGO_URL || "";
+
+  const gameID = req.body.GameID;
+  const userID = req.body.UserID;
+  const userName = req.body.UserName;
+  const comment = req.body.comment;
+
+  try {
+    const client = await MongoClient.connect(mongoURI);
+    const db: Db = client.db("Ice");
+
+    const collectionGames: Collection = db.collection("Games");
+
+    const addComment = {
+      $push: { comment: {text: comment, authorID: userID, authorName : userName}}
+    }
+
+    await collectionGames.updateOne({gameID: gameID},addComment)
+    res.status(200);
+
+    client.close(); // Schließe die Verbindung zur Datenbank
+  } catch (err) {
+    console.error("Fehler beim Ausführen der Abfrage:", err);
+    res.status(500).send("Interner Serverfehler");
+  }
+});
 export { gamesRouter };
