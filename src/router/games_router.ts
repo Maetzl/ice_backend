@@ -240,4 +240,105 @@ gamesRouter.post(
     }
   }
 );
+gamesRouter.post(
+  "/addcomment",
+  validateAccessToken,
+  async (req: any, res: any) => {
+    const mongoURI = process.env.MONGO_URL || "";
+
+    const gameID = req.body.GameID;
+    const userID = req.body.UserID;
+    const userName = req.body.UserName;
+    const comment = req.body.comment;
+
+    try {
+      const client = await MongoClient.connect(mongoURI);
+      const db: Db = client.db("Ice");
+
+      const collectionGames: Collection = db.collection("Games");
+
+      const addComment = {
+        $push: {
+          comments: { text: comment, authorID: userID, authorName: userName },
+        },
+      };
+
+      await collectionGames.updateOne({ gameID: gameID }, addComment);
+      res.status(200);
+
+      client.close(); // Schließe die Verbindung zur Datenbank
+    } catch (err) {
+      console.error("Fehler beim Ausführen der Abfrage:", err);
+      res.status(500).send("Interner Serverfehler");
+    }
+  }
+);
+gamesRouter.post(
+  "/removecomment",
+  validateAccessToken,
+  async (req: any, res: any) => {
+    const mongoURI = process.env.MONGO_URL || "";
+
+    const gameID = req.body.GameID;
+    const userID = req.body.UserID;
+    const userName = req.body.UserName;
+    const comment = req.body.comment;
+
+    try {
+      const client = await MongoClient.connect(mongoURI);
+      const db: Db = client.db("Ice");
+
+      const collectionGames: Collection = db.collection("Games");
+
+      await collectionGames.updateOne(
+        { "comments.authorID": userID },
+        { $pull: { comments: { authorID: userID } } }
+      );
+      res.status(200);
+
+      client.close(); // Schließe die Verbindung zur Datenbank
+    } catch (err) {
+      console.error("Fehler beim Ausführen der Abfrage:", err);
+      res.status(500).send("Interner Serverfehler");
+    }
+  }
+);
+
+gamesRouter.post(
+  "/replacecomment",
+  validateAccessToken,
+  async (req: any, res: any) => {
+    const mongoURI = process.env.MONGO_URL || "";
+
+    const gameID = req.body.GameID;
+    const userID = req.body.UserID;
+    const userName = req.body.UserName;
+    const comment = req.body.comment;
+
+    try {
+      const client = await MongoClient.connect(mongoURI);
+      const db: Db = client.db("Ice");
+
+      const collectionGames: Collection = db.collection("Games");
+
+      console.log("comnt: ", comment);
+      await collectionGames.updateOne(
+        { "comments.authorID": userID },
+        {
+          $set: {
+            "comments.$.text": comment,
+            "comments.$.authorName": userName,
+            "comments.$.authorID": userID,
+          },
+        }
+      );
+      res.status(200);
+
+      client.close(); // Schließe die Verbindung zur Datenbank
+    } catch (err) {
+      console.error("Fehler beim Ausführen der Abfrage:", err);
+      res.status(500).send("Interner Serverfehler");
+    }
+  }
+);
 export { gamesRouter };
