@@ -26,25 +26,27 @@ profileRouter.post("/", validateAccessToken, async (req: any, res: any) => {
     const db: Db = client.db("Ice");
     const collection: Collection = db.collection("Users");
 
-    const regexQuery = new RegExp(userID);
+    //const regexQuery = new RegExp(userID);
     //const user = await collection.findOne({ playerID: { $regex: regexQuery } });
 
     const user = await collection.find({ playerID: userID }).toArray();
 
+    console.log(user);
+
     if (user.length == 0) {
-      const result = await collection.insertOne({
-        name: "",
-        description: "",
-        country: "",
-        games: [],
-        playerID: userID,
-      });
-
-      const getInputedData = await collection
-        .find({ playerID: userID })
-        .toArray();
-
-      res.status(200).json(getInputedData[0]);
+      //const result = await collection.insertOne({
+      //  name: "",
+      //  description: "",
+      //  country: "",
+      //  games: [],
+      //  playerID: userID,
+      //});
+      //
+      //const getInputedData = await collection
+      //  .find({ playerID: userID })
+      //  .toArray();
+      //
+      res.status(500).json("Cant find user");
     } else if (user.length == 1) {
       res.status(200).json(user[0]);
     } else {
