@@ -106,80 +106,121 @@ profileRouter.post(
     }
   }
 );
-profileRouter.post("/basket", async(req: any, res: { status: (arg0: number) => { (): any; new(): any; json: { (arg0: any): void; new(): any; }; }; }) => {
+profileRouter.post(
+  "/basket",
+  validateAccessToken,
+  async (
+    req: any,
+    res: {
+      status: (arg0: number) => {
+        (): any;
+        new (): any;
+        json: { (arg0: any): void; new (): any };
+      };
+    }
+  ) => {
+    const userID = req.body.UserID;
+    const mongoURI = process.env.MONGO_URL || "";
 
-  const userID = req.body.UserID;
-  const mongoURI = process.env.MONGO_URL || "";
+    try {
+      const client = await MongoClient.connect(mongoURI);
+      const db: Db = client.db("Ice");
+      const collectionUsers: Collection = db.collection("Users");
+      const collectionGames: Collection = db.collection("Games");
 
-  try {
-    const client = await MongoClient.connect(mongoURI);
-    const db: Db = client.db("Ice");
-    const collectionUsers: Collection = db.collection("Users");
-    const collectionGames: Collection = db.collection("Games");
+      const user = await collectionUsers.find({ playerID: userID }).toArray();
+      const gameIds = user[0].basket;
+      console.log(req.body);
+      console.log("user:", user);
+      console.log("gameids:", gameIds);
+      const basket = await collectionGames
+        .find({ gameID: { $in: gameIds } })
+        .toArray();
 
-    const user = await collectionUsers.find({ playerID: userID }).toArray();    
-    const gameIds = user[0].basket;
-    console.log(req.body);
-    console.log("user:",user);
-    console.log("gameids:",gameIds);
-    const basket = await collectionGames.find({gameID: { $in: gameIds } }).toArray();
-      
-    res.status(200).json(basket);
+      res.status(200).json(basket);
 
-    client.close(); // Schließe die Verbindung zur Datenbank
-  }catch (err) {
+      client.close(); // Schließe die Verbindung zur Datenbank
+    } catch (err) {
       console.error("Fehler beim Ausführen der Abfrage:", err);
       res.status(500);
     }
-});
-profileRouter.post("/removebasket", async(req: any, res: { status: (arg0: number) => { (): any; new(): any; json: { (arg0: any): void; new(): any; }; }; }) => {
+  }
+);
+profileRouter.post(
+  "/removebasket",
+  validateAccessToken,
+  async (
+    req: any,
+    res: {
+      status: (arg0: number) => {
+        (): any;
+        new (): any;
+        json: { (arg0: any): void; new (): any };
+      };
+    }
+  ) => {
+    const userID = req.body.UserID;
+    const gameID = req.body.GameID;
+    const mongoURI = process.env.MONGO_URL || "";
 
-  const userID = req.body.UserID;
-  const gameID = req.body.GameID;
-  const mongoURI = process.env.MONGO_URL || "";
+    try {
+      const client = await MongoClient.connect(mongoURI);
+      const db: Db = client.db("Ice");
+      const collectionUsers: Collection = db.collection("Users");
 
-  try {
-    const client = await MongoClient.connect(mongoURI);
-    const db: Db = client.db("Ice");
-    const collectionUsers: Collection = db.collection("Users");
+      const remove = { $pull: { basket: gameID } };
 
-    const remove ={ $pull: { basket: gameID }};
+      const user = await collectionUsers.updateOne(
+        { playerID: userID },
+        remove
+      );
 
-    const user = await collectionUsers.updateOne({ playerID: userID },remove);
-      
-    res.status(200).json(user);
+      res.status(200).json(user);
 
-    client.close(); // Schließe die Verbindung zur Datenbank
-  }catch (err) {
+      client.close(); // Schließe die Verbindung zur Datenbank
+    } catch (err) {
       console.error("Fehler beim Ausführen der Abfrage:", err);
       res.status(500);
     }
-});
-profileRouter.post("/buybasket", async(req: any, res: { status: (arg0: number) => { (): any; new(): any; json: { (arg0: any): void; new(): any; }; }; }) => {
+  }
+);
+profileRouter.post(
+  "/buybasket",
+  validateAccessToken,
+  async (
+    req: any,
+    res: {
+      status: (arg0: number) => {
+        (): any;
+        new (): any;
+        json: { (arg0: any): void; new (): any };
+      };
+    }
+  ) => {
+    const userID = req.body.UserID;
+    const mongoURI = process.env.MONGO_URL || "";
 
-  const userID = req.body.UserID;
-  const mongoURI = process.env.MONGO_URL || "";
+    try {
+      const client = await MongoClient.connect(mongoURI);
+      const db: Db = client.db("Ice");
+      const collectionUsers: Collection = db.collection("Users");
 
-  try {
-    const client = await MongoClient.connect(mongoURI);
-    const db: Db = client.db("Ice");
-    const collectionUsers: Collection = db.collection("Users");
+      const user = await collectionUsers.find({ playerID: userID }).toArray();
+      const gameIds = user[0].basket;
+      const remove = { $pull: { basket: { $in: gameIds } } };
 
-    const user = await collectionUsers.find({ playerID: userID }).toArray();    
-    const gameIds = user[0].basket;
-    const remove ={ $pull: { basket: {$in : gameIds }}};
-    
-    const addGames = {
-      $push: { games: { $each : gameIds } }
-    };
-    await collectionUsers.updateOne({ playerID: userID },remove);
-    await collectionUsers.updateOne({ playerID: userID },addGames);
-    res.status(200).json(user);
+      const addGames = {
+        $push: { games: { $each: gameIds } },
+      };
+      await collectionUsers.updateOne({ playerID: userID }, remove);
+      await collectionUsers.updateOne({ playerID: userID }, addGames);
+      res.status(200).json(user);
 
-    client.close(); // Schließe die Verbindung zur Datenbank
-  }catch (err) {
+      client.close(); // Schließe die Verbindung zur Datenbank
+    } catch (err) {
       console.error("Fehler beim Ausführen der Abfrage:", err);
       res.status(500);
     }
-});
+  }
+);
 export { profileRouter };
