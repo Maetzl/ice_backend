@@ -1,12 +1,11 @@
-import express, { Express, Request, Response } from 'express';
-import dotenv from 'dotenv';
-import helmet from 'helmet';
-import cors from 'cors';
-import nocache from 'nocache';
-import { profileRouter } from './router/profile_router';
-import { gamesRouter } from './router/games_router';
-import { libraryRouter } from './router/library_router';
-const { messagesRouter } = require("./messages/messages_router");
+import express, { Express, Request, Response } from "express";
+import dotenv from "dotenv";
+import helmet from "helmet";
+import cors from "cors";
+import nocache from "nocache";
+import { profileRouter } from "./router/profile_router";
+import { gamesRouter } from "./router/games_router";
+import { libraryRouter } from "./router/library_router";
 const { errorHandler } = require("./middleware/error");
 const { notFoundHandler } = require("./middleware/not-found");
 
@@ -28,7 +27,7 @@ const apiRouter = express.Router();
 
 //app.use(auth(config));
 
-app.get('/', (req: Request, res: Response) => {
+app.get("/", (req: Request, res: Response) => {
   res.send("Backend");
 });
 
@@ -73,7 +72,6 @@ app.use(
 );
 
 app.use("/api", apiRouter);
-apiRouter.use("/messages", messagesRouter);
 
 //app.use("/", apiRouter)
 apiRouter.use("/profile", profileRouter);
@@ -83,4 +81,4 @@ apiRouter.use("/library", libraryRouter);
 app.use(errorHandler);
 app.use(notFoundHandler);
 
-export {app}
+export { app };
